@@ -3,39 +3,33 @@ gutil = require('gulp-util')
 
 coffee = require('gulp-coffee')
 coffeelint = require('gulp-coffeelint')
-compass = require('gulp-compass')
-concat = require('gulp-concat')
-uglify = require('gulp-uglify')
 jshint = require('gulp-jshint')
-styledocco = require('gulp-styledocco')
+stylus = require('gulp-stylus')
+nib = require('nib')
 
-path = require('path')
 fs = require('fs')
 
 paths = {
-  coffee: [ 'src/coffee/**/*.coffee' ]
-  js: [ 'public_html/js/script.js' ]
+  coffee: 'src/truncatetext.coffee'
+  coffeeDest: 'dist/truncatetext.js'
   staticJs: [
-    'bower_components/jquery-1.11.1.min/index.js'
-  ]
-  staticJsDest: [
-    'public_html/js/jquery-1.11.1.min.js'
-  ]
-  scss: [ 'src/scss/**/*.scss' ]
-  lib: [
     'bower_components/jquery/dist/jquery.min.js'
     'bower_components/underscore/underscore.js'
     'bower_components/backbone/backbone.js'
   ]
-  doc: 'public_html/docs'
+  staticJsDest: [
+    'dist/jquery.min.js'
+    'dist/underscore.js'
+    'dist/backbone.js'
+  ]
+  stylus: 'src/**/*.styl'
+  stylusDest: 'demo'
 }
 
 
 ###
  * Coffee Script
 ###
-
-
 
 gulp.task('coffee', (callback) ->
   coffeeStream = coffee({ bare: true }).on('error', (err) ->
@@ -53,7 +47,7 @@ gulp.task('coffee', (callback) ->
     .pipe(coffeelintStream)
     .pipe(coffeelint.reporter())
     .pipe(coffeeStream)
-    .pipe(gulp.dest('public_html/js'))
+    .pipe(gulp.dest('dist'))
 )
 
 
@@ -66,79 +60,27 @@ gulp.task('jshint', (callback) ->
     gutil.log(err)
     jshintStream.end()
   )
-  gulp.src(paths.js)
+  gulp.src(paths.coffeeDest)
     .pipe(jshintStream)
     .pipe(jshint.reporter('default'))
 )
 
 
 ###
- * Sass & Compass
+ * Stylus
 ###
 
-gulp.task('compassDev', (callback) ->
-  stream = compass(
-    config_file: './config-dev.rb'
-    css: 'public_html/css'
-    sass: 'src/scss'
-#     bundle_exec: true # exec with 'bundler'
+gulp.task('stylus', (callback) ->
+  stream = stylus(
+    use: [ nib() ]
   ).on('error', (err) ->
     gutil.log(err)
     stream.end()
   )
 
-  gulp.src(paths.scss)
+  gulp.src(paths.stylus)
     .pipe(stream)
-)
-
-gulp.task('compassPro', (callback) ->
-  stream = compass(
-    config_file: './config.rb'
-    css: 'public_html/css'
-    sass: 'src/scss'
-#     bundle_exec: true # exec with 'bundler'
-  ).on('error', (err) ->
-    gutil.log(err)
-    stream.end()
-  )
-
-  gulp.src(paths.scss)
-    .pipe(stream)
-)
-
-gulp.task('styledocco', [ 'compassPro' ], (callback) ->
-  stream = styledocco(
-    out: paths.doc
-    name: '"Style Guide"'
-    preprocessor: '"sass --compass"'
-#     preprocessor: '"bundle exec sass --compass"'
-    verbose: true
-#     include: [
-#       'public_html/fs/sp/common/css/global.css'
-#       'public_html/fs/sp/css/style.css'
-#     ]
-  )
-  gulp.src(paths.scss).pipe(stream)
-
-  callback()
-)
-
-
-
-###
- * Concat
-###
-
-gulp.task('buildLib', () ->
-  concatStream = concat('lib.js')
-  uglifyStream = uglify(
-    mangle: false
-    preserveComments: 'all'
-  )
-  gulp.src(paths.lib)
-    .pipe(concatStream)
-    .pipe(uglifyStream)
-    .pipe(gulp.dest('public_html/js/'))
+    .pipe(gulp.dest(paths.stylusDest))
 )
 
 
@@ -167,6 +109,7 @@ gulp.task('watch', () ->
   ])
 )
 
+
 ###
  * command
 ###
@@ -174,15 +117,14 @@ gulp.task('watch', () ->
 gulp.task('default', [
   'coffee'
   'jshint'
-  'compassDev'
+  'stylus'
   'watch'
 ])
 
 gulp.task('deploy', [
   'copy'
-  'buildLib'
   'coffee'
   'jshint'
-  'styledocco'
+  'stylus'
 ])
 
