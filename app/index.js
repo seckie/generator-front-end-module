@@ -47,14 +47,15 @@ var FrontEndModuleGenerator = yeoman.generators.Base.extend({
 
     this.copy('_gulpfile.js', 'gulpfile.js');
     this.copy('_package.json', 'package.json');
-    this.copy('README.md', 'README.md');
     this.copy('stylus/style.styl', 'src/stylus/style.styl');
   },
 
   projectfiles: function () {
+    this.copy('README.md', 'README.md');
     this.copy('editorconfig', '.editorconfig');
     this.copy('jshintrc', '.jshintrc');
     this.copy('babelrc', '.babelrc');
+    this.copy('gitignore', '.gitignore');
   }
 });
 
