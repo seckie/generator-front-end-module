@@ -41,19 +41,20 @@ var FrontEndModuleGenerator = yeoman.generators.Base.extend({
 
   app: function () {
     this.mkdir('src');
-    this.mkdir('src/coffee');
-    this.mkdir('src/scss');
+    this.mkdir('src/jsx');
+    this.mkdir('src/stylus');
     this.mkdir('dist');
 
-    this.copy('_gulpfile.coffee', 'gulpfile.coffee');
+    this.copy('_gulpfile.js', 'gulpfile.js');
     this.copy('_package.json', 'package.json');
-    this.copy('_bower.json', 'bower.json');
     this.copy('README.md', 'README.md');
+    this.copy('stylus/style.styl', 'src/stylus/style.styl');
   },
 
   projectfiles: function () {
     this.copy('editorconfig', '.editorconfig');
     this.copy('jshintrc', '.jshintrc');
+    this.copy('babelrc', '.babelrc');
   }
 });
 
