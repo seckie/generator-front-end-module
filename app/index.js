@@ -10,7 +10,7 @@ var FrontEndModuleGenerator = yeoman.generators.Base.extend({
     this.pkg = require('../package.json');
 
     this.on('end', function () {
-      if (this.options['install-modules']) {
+      if (!this.options['skip-install']) {
         this.installDependencies();
       }
     });
@@ -28,8 +28,8 @@ var FrontEndModuleGenerator = yeoman.generators.Base.extend({
     var prompts = [{
       type: 'confirm',
       name: 'install-modules',
-      message: 'Would you like to install npm modules right now?',
-      default: false
+      message: 'Would you like to skip installing npm modules?',
+      default: true
     }];
 
     this.prompt(prompts, function (props) {
