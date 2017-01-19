@@ -32,7 +32,13 @@ module.exports = Generator.extend({
       ['jshintrc', '.jshintrc'],
       ['babelrc', '.babelrc'],
       ['gitignore', '.gitignore'],
-      ['stylus/style.styl', 'src/stylus/style.styl']
+      // stylus
+      ['stylus/style.styl', 'src/stylus/style.styl'],
+      // sass
+      ['sass/style.sass', 'src/sass/style.sass'],
+      ['sass/normalize.css', 'src/sass/normalize.css'],
+      ['sass/_mixin.sass', 'src/sass/_mixin.sass'],
+      ['sass/_var.sass', 'src/sass/_var.sass']
     ];
     files.forEach(file => {
       this.fs.copy(
