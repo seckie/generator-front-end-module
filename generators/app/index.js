@@ -5,6 +5,7 @@ var yosay = require('yosay');
 
 module.exports = Generator.extend({
   prompting: function () {
+    var self = this;
     // Have Yeoman greet the user.
     this.log(yosay(
       'Welcome to the groovy ' + chalk.red('generator-front-end-module') + ' generator!'
@@ -20,6 +21,9 @@ module.exports = Generator.extend({
     return this.prompt(prompts).then(function (props) {
       // To access props later use this.props.someAnswer;
       this.props = props;
+      if (this.props['install-dependencies']) {
+        self.npmInstall();
+      }
     }.bind(this));
   },
 
