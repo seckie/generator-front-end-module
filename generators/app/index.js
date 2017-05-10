@@ -46,6 +46,7 @@ module.exports = Generator.extend({
         this.destinationPath(file[1])
       );
     });
+    this.fs.write('public/empty', '');
   },
 
   install: function () {
